@@ -60,10 +60,4 @@ public class User {
      */
     @Column(name = "active_yn", columnDefinition = "TINYINT")
     private OnOffStatus activeYn;
-
-    /**
-     * 계좌 번호
-     */
-    @Column(name = "account_number")
-    private String accountNumber;
 }

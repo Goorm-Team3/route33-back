@@ -46,4 +46,10 @@ public class Account {
      */
     @Column(name = "active_yn", columnDefinition = "TINYINT")
     private OnOffStatus activeYn;
+
+    /**
+     * 회원 ID
+     */
+    @Column(name = "user_id")
+    private Long userId;
 }
