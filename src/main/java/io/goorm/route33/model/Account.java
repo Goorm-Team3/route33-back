@@ -52,4 +52,8 @@ public class Account {
      */
     @Column(name = "user_id")
     private Long userId;
+
+    public void depositBalance(int amount) {
+        this.balance += amount;
+    }
 }
