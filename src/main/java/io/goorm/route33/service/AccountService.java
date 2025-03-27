@@ -51,6 +51,8 @@ public class AccountService {
         log.info("입금 전 잔액: {}", account.getBalance());
         account.depositBalance(amount);
 
+        accountRepository.save(account);
+
         return account.getBalance();
     }
 
