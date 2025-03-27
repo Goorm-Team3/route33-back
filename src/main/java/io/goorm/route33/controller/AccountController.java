@@ -35,4 +35,18 @@ public class AccountController {
 
         return new ResponseEntity<>(new CustomResponseDto<>("입금 성공", balance), HttpStatus.OK);
     }
+
+    /**
+     * 계좌 출금을 요청한다.
+     *
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal(@RequestBody AccountRequestDto requestDto) {
+        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+        int balance = accountService.withdrawal(userId, requestDto.getAmount());
+
+        return new ResponseEntity<>(new CustomResponseDto<>("출금 성공", balance), HttpStatus.OK);
+    }
 }

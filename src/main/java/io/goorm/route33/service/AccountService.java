@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -46,11 +47,33 @@ public class AccountService {
      * @param amount
      * @return
      */
+    @Transactional
     public int deposit(Long userId, int amount) {
         Account account = getAccountWithUserId(userId);
         log.info("입금 전 잔액: {}", account.getBalance());
-        account.depositBalance(amount);
 
+        account.depositBalance(amount);
+        accountRepository.save(account);
+
+        return account.getBalance();
+    }
+
+    /**
+     * 계좌에서 금액을 출금하고 잔액을 반환한다.
+     *
+     * @param userId
+     * @param amount
+     * @return
+     */
+    @Transactional
+    public int withdrawal(Long userId, int amount) {
+        Account account = getAccountWithUserId(userId);
+        log.info("출금 전 잔액: {}", account.getBalance());
+        if (account.getBalance() < amount) {
+            throw new CustomException("출금을 위한 잔액이 부족합니다, 현재 잔액: " + account.getBalance(), HttpStatus.BAD_REQUEST);
+        }
+
+        account.withdrawalBalance(amount);
         accountRepository.save(account);
 
         return account.getBalance();

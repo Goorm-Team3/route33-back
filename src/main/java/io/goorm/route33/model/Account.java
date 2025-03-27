@@ -56,4 +56,8 @@ public class Account {
     public void depositBalance(int amount) {
         this.balance += amount;
     }
+
+    public void withdrawalBalance(int amount) {
+        this.balance -= amount;
+    }
 }
