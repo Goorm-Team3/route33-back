@@ -79,9 +79,35 @@ public class AccountService {
         return account.getBalance();
     }
 
+    /**
+     * 다른 계좌로 송금한다.
+     *
+     * @param userId
+     * @param targetAccountNumber
+     * @param amount
+     */
+    @Transactional
+    public void transfer(Long userId, String targetAccountNumber, int amount) {
+        Account fromAccount = getAccountWithUserId(userId);
+        if (fromAccount.getBalance() < amount) {
+            throw new CustomException("송금을 위한 잔액이 부족합니다, 현재 잔액: " + fromAccount.getBalance(), HttpStatus.BAD_REQUEST);
+        }
+        Account toAccount = getAccountWithAccountNumber(targetAccountNumber);
+
+        fromAccount.withdrawalBalance(amount);
+        toAccount.depositBalance(amount);
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
+    }
+
     private Account getAccountWithUserId(Long userId) {
         return accountRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException("회원 번호 '" + userId + "' 에 대한 계좌를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST));
+    }
+
+    private Account getAccountWithAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new CustomException("계좌 번호 '" + accountNumber + "' 에 대한 계좌를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST));
     }
 
     private String generateAccountNumber() {

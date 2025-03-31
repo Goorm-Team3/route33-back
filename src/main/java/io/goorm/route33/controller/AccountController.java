@@ -49,4 +49,19 @@ public class AccountController {
 
         return new ResponseEntity<>(new CustomResponseDto<>("출금 성공", balance), HttpStatus.OK);
     }
+
+    /**
+     * 계좌 송금을 요청한다.
+     *
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/transfer")
+    public ResponseEntity<?> transfer(@RequestBody AccountRequestDto requestDto) {
+        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+        accountService.transfer(userId, requestDto.getAccountNumber(), requestDto.getAmount());
+
+        return new ResponseEntity<>(new CustomResponseDto<>("송금 성공", null), HttpStatus.OK);
+
+    }
 }

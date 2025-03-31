@@ -1,6 +1,7 @@
 package io.goorm.route33.service;
 
 import io.goorm.route33.exception.CustomException;
+import io.goorm.route33.model.Account;
 import io.goorm.route33.model.dto.UserRegisterRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class AccountServiceTest {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -66,5 +69,30 @@ class AccountServiceTest {
         assertThatThrownBy(() -> accountService.withdrawal(userId, amount))
                 .isInstanceOf(CustomException.class)
                 .hasMessageContaining("출금을 위한 잔액이 부족합니다");
+    }
+
+    @Test
+    @DisplayName("송금 테스트")
+    void transferTest() {
+        // 송금 보내는 계좌 잔액 50000원 세팅
+        Long userId = userRepository.findByLoginId(LOGIN_ID).get().getUserId();
+        int initBalance = 50000;
+        accountService.deposit(userId, initBalance);
+
+        // 송금 받을 계좌 생성
+        UserRegisterRequestDto requestDto =
+                new UserRegisterRequestDto("테스트2", "user2", "1234", "1234");
+        userService.createUserAndAccount(requestDto);
+        Long userId2 = userRepository.findByLoginId("user2").get().getUserId();
+        String targetAccountNumber = accountRepository.findByUserId(userId2).get().getAccountNumber();
+
+        // WHEN
+        int amount = 30000;
+        accountService.transfer(userId, targetAccountNumber, amount);
+
+        Account fromAccount = accountRepository.findByUserId(userId).get();
+        Account toAccount = accountRepository.findByUserId(userId2).get();
+        assertThat(fromAccount.getBalance()).isEqualTo(20000);
+        assertThat(toAccount.getBalance()).isEqualTo(30000);
     }
 }
