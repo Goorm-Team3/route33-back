@@ -2,7 +2,9 @@ package io.goorm.route33.service;
 
 import io.goorm.route33.exception.CustomException;
 import io.goorm.route33.model.Account;
+import io.goorm.route33.model.User;
 import io.goorm.route33.model.code.OnOffStatus;
+import io.goorm.route33.model.dto.AccountInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
     private final SecureRandom random = new SecureRandom();
 
     /**
@@ -38,6 +41,24 @@ public class AccountService {
                 .userId(userId).build();
 
         accountRepository.save(account);
+    }
+
+    /**
+     * 계좌 정보를 반환한다.
+     *
+     * @param userId
+     * @return
+     */
+    public AccountInfoResponseDto getAccountInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("존재하지 않는 회원입니다.", HttpStatus.BAD_REQUEST));
+
+        Account account = getAccountWithUserId(userId);
+
+        return AccountInfoResponseDto.builder()
+                .username(user.getUsername())
+                .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance()).build();
     }
 
     /**

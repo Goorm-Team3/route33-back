@@ -2,6 +2,7 @@ package io.goorm.route33.service;
 
 import io.goorm.route33.exception.CustomException;
 import io.goorm.route33.model.Account;
+import io.goorm.route33.model.dto.AccountInfoResponseDto;
 import io.goorm.route33.model.dto.UserRegisterRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,14 +27,28 @@ class AccountServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private static final String USERNAME = "홍길동";
     private static final String LOGIN_ID = "user1";
 
     @BeforeEach
     void init() {
         UserRegisterRequestDto requestDto =
-                new UserRegisterRequestDto("테스트", LOGIN_ID, "1234", "1234");
+                new UserRegisterRequestDto(USERNAME, LOGIN_ID, "1234", "1234");
 
         userService.createUserAndAccount(requestDto);
+    }
+
+    @Test
+    @DisplayName("계좌 정보 조회 테스트")
+    void getAccountInfoTest() {
+        Long userId = userRepository.findByLoginId(LOGIN_ID).get().getUserId();
+
+        AccountInfoResponseDto result = accountService.getAccountInfo(userId);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo(USERNAME);
+        assertThat(result.getAccountNumber()).isNotNull();
+        assertThat(result.getBalance()).isEqualTo(0);
     }
 
     @Test
