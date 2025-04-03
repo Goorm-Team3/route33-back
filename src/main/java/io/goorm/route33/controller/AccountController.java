@@ -42,7 +42,7 @@ public class AccountController {
      * @param requestDto
      * @return
      */
-    @PostMapping("/withdrawal")
+    @PostMapping("/withdraw")
     public ResponseEntity<?> withdrawal(@RequestBody AccountRequestDto requestDto) {
         Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
         int balance = accountService.withdrawal(userId, requestDto.getAmount());
