@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity(name = "user")
+@Entity(name = "user_col")
 public class User {
 
     /**
@@ -60,4 +60,16 @@ public class User {
      */
     @Column(name = "active_yn", columnDefinition = "TINYINT")
     private OnOffStatus activeYn;
+
+
+    @Column
+    private String refreshToken;
+
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
+    public boolean hasSameRefreshToken(String token) {
+        return this.refreshToken != null && this.refreshToken.equals(token);
+    }
 }

@@ -9,4 +9,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     Optional<User> findByLoginId(String loginId);
+
+    Optional<User> findByRefreshToken(String refreshToken);
+
+    default User getByRefreshToken(String refreshToken){
+        return findByRefreshToken(refreshToken).orElseThrow(() -> new RuntimeException());
+        //TODO : Exception handle 필요
+    }
 }
