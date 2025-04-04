@@ -3,7 +3,10 @@ package io.goorm.route33.controller;
 import io.goorm.route33.auth.Auth;
 import io.goorm.route33.auth.TokenPair;
 import io.goorm.route33.auth.TokenService;
+import io.goorm.route33.exception.CustomException;
+import io.goorm.route33.model.User;
 import io.goorm.route33.model.dto.*;
+import io.goorm.route33.service.UserRepository;
 import io.goorm.route33.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
+    private final UserRepository userRepository;
 
     /**
      * 회원 가입을 요청한다.
@@ -48,6 +52,13 @@ public class UserController {
 //    public ResponseEntity<?> myPage(@Auth Long userId) {
 //        return ResponseEntity.ok(userId);
 //    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenRefreshRequestDto requestDto){
+
+        UserLogoutResponseDto responseDto = userService.logout(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 
     @PostMapping("/token/refresh")
     public ResponseEntity<TokenRefreshResponseDto> refreshToken(@RequestBody TokenRefreshRequestDto requestDto){

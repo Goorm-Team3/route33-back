@@ -5,7 +5,9 @@ import io.goorm.route33.auth.TokenService;
 import io.goorm.route33.exception.CustomException;
 import io.goorm.route33.model.User;
 import io.goorm.route33.model.code.OnOffStatus;
+import io.goorm.route33.model.dto.TokenRefreshRequestDto;
 import io.goorm.route33.model.dto.UserLoginRequestDto;
+import io.goorm.route33.model.dto.UserLogoutResponseDto;
 import io.goorm.route33.model.dto.UserRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -82,9 +84,20 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.BAD_REQUEST));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-            throw new CustomException("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
         return tokenService.createTokenPair(user.getUserId());
+    }
+
+    public UserLogoutResponseDto logout(TokenRefreshRequestDto requestDto) {
+        User user = userRepository.findByRefreshToken(requestDto.refreshToken())
+                .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.BAD_REQUEST));
+        user.updateRefreshToken(null);
+        userRepository.save(user);
+        UserLogoutResponseDto responseDto = new UserLogoutResponseDto("로그아웃 완료");
+
+
+        return responseDto;
     }
 }

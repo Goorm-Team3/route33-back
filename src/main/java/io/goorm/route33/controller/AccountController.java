@@ -79,7 +79,6 @@ public class AccountController {
     public ResponseEntity<?> transfer(@RequestBody AccountRequestDto requestDto) {
         Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
         accountService.transfer(userId, requestDto.getAccountNumber(), requestDto.getAmount());
-
         return new ResponseEntity<>(new CustomResponseDto<>("송금 성공", null), HttpStatus.OK);
 
     }

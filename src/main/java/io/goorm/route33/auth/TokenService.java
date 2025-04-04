@@ -53,8 +53,9 @@ public class TokenService {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken();
 
-        User user = userRepository.getById(userId);
+        User user = userRepository.getByUserId(userId);
         user.updateRefreshToken(refreshToken);
+        userRepository.save(user);
 
         return new TokenPair(accessToken,refreshToken);
     }
