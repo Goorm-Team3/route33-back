@@ -36,7 +36,6 @@ public class AccountController {
      */
     @GetMapping
     public ResponseEntity<?> accountInfo(@Auth Long userId) {
-        System.out.println(userId);
         AccountInfoResponseDto responseDto = accountService.getAccountInfo(userId);
 
         return new ResponseEntity<>(new CustomResponseDto<>("조회 성공", responseDto), HttpStatus.OK);
