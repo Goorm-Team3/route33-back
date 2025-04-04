@@ -1,14 +1,14 @@
 package io.goorm.route33.model.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginRequestDto {
-    private String loginId;
-    private String password;
+@Builder
+public class UserLoginResponseDto {
+    private String accessToken;
 }
-

@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories
-@SpringBootApplication
 @ConfigurationPropertiesScan
+@SpringBootApplication
 public class Route33BackApplication {
 
     public static void main(String[] args) {

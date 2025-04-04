@@ -21,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
 
     private final TokenService tokenService;
 
@@ -71,6 +72,11 @@ public class UserService {
         return password.equals(passwordConfirm);
     }
 
+
+    /**
+     * 로그인 진행
+     *
+     */
     public TokenPair login(UserLoginRequestDto requestDto) {
         User user = userRepository.findByLoginId(requestDto.getLoginId())
                 .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.UNAUTHORIZED));
