@@ -1,5 +1,8 @@
 package io.goorm.route33.controller;
 
+import io.goorm.route33.auth.Auth;
+import io.goorm.route33.auth.TokenService;
+import io.goorm.route33.model.User;
 import io.goorm.route33.model.dto.AccountInfoResponseDto;
 import io.goorm.route33.model.dto.AccountRequestDto;
 import io.goorm.route33.model.dto.CustomResponseDto;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Member;
 
 /**
  * 계좌 관련 컨트롤러
@@ -30,8 +35,8 @@ public class AccountController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<?> accountInfo() {
-        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+    public ResponseEntity<?> accountInfo(@Auth Long userId) {
+        System.out.println(userId);
         AccountInfoResponseDto responseDto = accountService.getAccountInfo(userId);
 
         return new ResponseEntity<>(new CustomResponseDto<>("조회 성공", responseDto), HttpStatus.OK);

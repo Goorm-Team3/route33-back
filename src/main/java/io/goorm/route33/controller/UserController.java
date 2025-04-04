@@ -44,10 +44,10 @@ public class UserController {
     }
 
 
-    @GetMapping("/me")
-    public ResponseEntity<?> myPage(@Auth Long userId) {
-        return ResponseEntity.ok(userId);
-    }
+//    @GetMapping("/me")
+//    public ResponseEntity<?> myPage(@Auth Long userId) {
+//        return ResponseEntity.ok(userId);
+//    }
 
     @PostMapping("/token/refresh")
     public ResponseEntity<TokenRefreshResponseDto> refreshToken(@RequestBody TokenRefreshRequestDto requestDto){
