@@ -1,8 +1,11 @@
 package io.goorm.route33.service;
 
+import io.goorm.route33.auth.TokenPair;
+import io.goorm.route33.auth.TokenService;
 import io.goorm.route33.exception.CustomException;
 import io.goorm.route33.model.User;
 import io.goorm.route33.model.code.OnOffStatus;
+import io.goorm.route33.model.dto.UserLoginRequestDto;
 import io.goorm.route33.model.dto.UserRegisterRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
+
+    private final TokenService tokenService;
 
     /**
      * 새로운 사용자를 생성하고 계좌를 등록한다.
@@ -64,5 +69,16 @@ public class UserService {
 
     private boolean isValidPassword(String password, String passwordConfirm) {
         return password.equals(passwordConfirm);
+    }
+
+    public TokenPair login(UserLoginRequestDto requestDto) {
+        User user = userRepository.findByLoginId(requestDto.getLoginId())
+                .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.UNAUTHORIZED));
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new CustomException("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        return tokenService.createTokenPair(user.getUserId());
     }
 }

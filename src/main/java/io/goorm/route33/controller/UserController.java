@@ -1,6 +1,8 @@
 package io.goorm.route33.controller;
 
+import io.goorm.route33.auth.TokenPair;
 import io.goorm.route33.model.dto.CustomResponseDto;
+import io.goorm.route33.model.dto.UserLoginRequestDto;
 import io.goorm.route33.model.dto.UserRegisterRequestDto;
 import io.goorm.route33.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +35,11 @@ public class UserController {
         userService.createUserAndAccount(requestDto);
 
         return new ResponseEntity<>(new CustomResponseDto<>("회원가입 성공", null), HttpStatus.OK);
+    }
+    @PostMapping("/login")
+
+    public ResponseEntity<?> login(@RequestBody UserLoginRequestDto requestDto) {
+        TokenPair tokenPair = userService.login(requestDto);
+        return ResponseEntity.ok(tokenPair);
     }
 }
