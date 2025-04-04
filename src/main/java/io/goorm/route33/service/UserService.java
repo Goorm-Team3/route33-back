@@ -79,7 +79,7 @@ public class UserService {
      */
     public TokenPair login(UserLoginRequestDto requestDto) {
         User user = userRepository.findByLoginId(requestDto.getLoginId())
-                .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new CustomException("존재하지 않는 아이디입니다.", HttpStatus.BAD_REQUEST));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new CustomException("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
