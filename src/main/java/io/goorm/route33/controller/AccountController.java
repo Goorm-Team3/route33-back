@@ -48,8 +48,7 @@ public class AccountController {
      * @return
      */
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody AccountRequestDto requestDto) {
-        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+    public ResponseEntity<?> deposit(@Auth Long userId, @RequestBody AccountRequestDto requestDto) {
         int balance = accountService.deposit(userId, requestDto.getAmount());
 
         return new ResponseEntity<>(new CustomResponseDto<>("입금 성공", balance), HttpStatus.OK);
@@ -62,8 +61,7 @@ public class AccountController {
      * @return
      */
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdrawal(@RequestBody AccountRequestDto requestDto) {
-        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+    public ResponseEntity<?> withdrawal(@Auth Long userId, @RequestBody AccountRequestDto requestDto) {
         int balance = accountService.withdrawal(userId, requestDto.getAmount());
 
         return new ResponseEntity<>(new CustomResponseDto<>("출금 성공", balance), HttpStatus.OK);
@@ -76,8 +74,7 @@ public class AccountController {
      * @return
      */
     @PostMapping("/transfer")
-    public ResponseEntity<?> transfer(@RequestBody AccountRequestDto requestDto) {
-        Long userId = 1L; // TODO 로그인 방식 구현 후 수정한다.
+    public ResponseEntity<?> transfer(@Auth Long userId, @RequestBody AccountRequestDto requestDto) {
         accountService.transfer(userId, requestDto.getAccountNumber(), requestDto.getAmount());
         return new ResponseEntity<>(new CustomResponseDto<>("송금 성공", null), HttpStatus.OK);
 
